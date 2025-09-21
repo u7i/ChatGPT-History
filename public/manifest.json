@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "ChatGPT History",
+  "version": "1.0",
+  "permissions": ["cookies"],
+
+  "background": {
+    "service_worker": "background-worker.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*"],
+      "js": ["content-chatgpt.js"]
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["src/chatgpt-agent/console.html"],
+      "matches": ["https://chatgpt.com/*"]
+    }
+  ]
+}
