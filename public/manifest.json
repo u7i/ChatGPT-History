@@ -16,9 +16,13 @@
     }
   ],
 
+  "host_permissions": [
+    "https://chatgpt.com/*"
+  ],
+
   "web_accessible_resources": [
     {
-      "resources": ["src/chatgpt-agent/console.html"],
+      "resources": [],
       "matches": ["https://chatgpt.com/*"]
     }
   ]
