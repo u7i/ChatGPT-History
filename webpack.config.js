@@ -1,5 +1,12 @@
+const deepmerge = require('deepmerge');
 const path = require('path');
+const { isPlainObject } = require('is-plain-object');
+
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const merge = (target, source) =>
+    deepmerge(target, source, { isMergeableObject: v => isPlainObject(v) || v instanceof Array });
 
 const common = {
     module: {
@@ -8,8 +15,8 @@ const common = {
                 test: /\.tsx?$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
-            },
-        ],
+            }
+        ]
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
@@ -21,7 +28,7 @@ const common = {
 }
 
 module.exports = [
-    {
+    merge(common, {
         entry: './src/dummy.js',
         output: {
             filename: 'ignore.js',
@@ -32,35 +39,56 @@ module.exports = [
                 patterns: [{ from: 'public' }]
             })
         ],
-    },
+    }),
 
     // Content Script for ChatGPT
-    {
+    merge(common, {
         entry: './src/front/index.ts',
         output: {
             filename: 'content-chatgpt.js',
             path: path.resolve(__dirname, 'dist'),
-        },
-        ...common
-    },
+        }
+    }),
 
     // Background script
-    {
+    merge(common, {
         entry: './src/worker/index.ts',
         output: {
             filename: 'background-worker.js',
             path: path.resolve(__dirname, 'dist'),
-        },
-        ...common
-    },
+        }
+    }),
 
     // Extension popup
-    {
+    merge(common, {
         entry: './src/popup/index.tsx',
         output: {
             filename: 'popup.js',
             path: path.resolve(__dirname, 'dist'),
         },
-        ...common
-    }
+
+        module: {
+            rules: [
+                {
+                    test: /\.module\.css$/i,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                esModule: false,
+                                modules: { localIdentName: '[name]--[local]--[hash:base64:5]' },
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+
+        plugins: [
+            new MiniCssExtractPlugin({
+                filename: 'popup.css',
+            })
+        ]
+    })
 ];
