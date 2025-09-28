@@ -1,4 +1,5 @@
 import ChatHistoryService from "./gpt/chat-history-service";
+import ActiveChatPromptService from "./gpt/active-chat-prompt-service";
 
 function urlChange(): Promise<void> {
     return new Promise(resolve => {
@@ -27,4 +28,15 @@ async function testHistoryService() {
     }
 }
 
+async function testActivePromptService() {
+    const service = new ActiveChatPromptService()
+
+    await new Promise(resolve => setTimeout(resolve, 3000))
+
+    console.log(service.hasContent())
+    await service.putAndSend("Hello, world!")
+    console.log(service.hasContent())
+}
+
 testHistoryService()
+testActivePromptService()

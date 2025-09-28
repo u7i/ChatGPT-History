@@ -13,6 +13,15 @@ class UnknownServiceResponseError extends Error {
     }
 }
 
+class ElementNotFoundError extends Error {
+    readonly element: string
+
+    constructor(element: string) {
+        super(`Element '${element}' was not found on the page`);
+        this.element = element
+    }
+}
+
 class ChatNotFoundError extends Error {
     readonly id: string
 
@@ -42,6 +51,7 @@ class BadChatHistoryError extends Error {
 
 export {
     ConnectionError,
+    ElementNotFoundError,
     ChatNotFoundError,
     AuthorizationError,
     BadChatHistoryError,
