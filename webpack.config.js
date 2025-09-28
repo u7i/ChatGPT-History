@@ -52,5 +52,15 @@ module.exports = [
             path: path.resolve(__dirname, 'dist'),
         },
         ...common
+    },
+
+    // Extension popup
+    {
+        entry: './src/popup/index.tsx',
+        output: {
+            filename: 'popup.js',
+            path: path.resolve(__dirname, 'dist'),
+        },
+        ...common
     }
 ];
